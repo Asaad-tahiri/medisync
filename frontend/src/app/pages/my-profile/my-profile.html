@@ -1,0 +1,98 @@
+<div class="profile-page">
+    <h1>👤 Mon Profil</h1>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <form (ngSubmit)="save()" #profileForm="ngForm">
+
+        <!-- Section 1 : Informations personnelles -->
+        <section class="card">
+            <h2>Informations personnelles</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Prénom *</label>
+                    <input id="firstName" type="text" [(ngModel)]="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Nom *</label>
+                    <input id="lastName" type="text" [(ngModel)]="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" [value]="email" readonly>
+                <small class="hint">L'email ne peut pas être modifié.</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Téléphone</label>
+                    <input id="phone" type="tel" [(ngModel)]="phone" name="phone" placeholder="+212 6 12 34 56 78">
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Date de naissance</label>
+                    <input id="dateOfBirth" type="date" [(ngModel)]="dateOfBirth" name="dateOfBirth">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ssn">Numéro de sécurité sociale</label>
+                <input id="ssn" type="text" [(ngModel)]="socialSecurityNumber" name="ssn">
+            </div>
+        </section>
+
+        <!-- Section 2 : Informations médicales -->
+        <section class="card">
+            <h2>Informations médicales</h2>
+
+            <!-- Allergies -->
+            <div class="form-group">
+                <label>Allergies</label>
+                <div class="tag-input">
+                    <input type="text"
+                           [(ngModel)]="newAllergy"
+                           name="newAllergy"
+                           placeholder="Ex : Pénicilline"
+                           (keydown.enter)="$event.preventDefault(); addAllergy()">
+                    <button type="button" class="btn-add" (click)="addAllergy()">+ Ajouter</button>
+                </div>
+                <div class="tag-list" *ngIf="allergies.length > 0">
+                    <span class="tag" *ngFor="let allergy of allergies; let i = index">
+                        {{ allergy }}
+                        <button type="button" (click)="removeAllergy(i)" aria-label="Supprimer">×</button>
+                    </span>
+                </div>
+                <p class="empty" *ngIf="allergies.length === 0">Aucune allergie renseignée.</p>
+            </div>
+
+            <!-- Antécédents -->
+            <div class="form-group">
+                <label>Antécédents médicaux</label>
+                <div class="tag-input">
+                    <input type="text"
+                           [(ngModel)]="newAntecedent"
+                           name="newAntecedent"
+                           placeholder="Ex : Diabète type 2"
+                           (keydown.enter)="$event.preventDefault(); addAntecedent()">
+                    <button type="button" class="btn-add" (click)="addAntecedent()">+ Ajouter</button>
+                </div>
+                <div class="tag-list" *ngIf="antecedents.length > 0">
+                    <span class="tag" *ngFor="let item of antecedents; let i = index">
+                        {{ item }}
+                        <button type="button" (click)="removeAntecedent(i)" aria-label="Supprimer">×</button>
+                    </span>
+                </div>
+                <p class="empty" *ngIf="antecedents.length === 0">Aucun antécédent renseigné.</p>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button type="submit" class="btn-primary" [disabled]="loading || profileForm.invalid">
+                {{ loading ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+            </button>
+        </div>
+    </form>
+</div>

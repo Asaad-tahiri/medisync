@@ -1,0 +1,252 @@
+.search-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    margin: 0 0 0.25rem;
+    color: #1a2540;
+}
+
+.page-header .subtitle {
+    color: #666;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Filtres */
+.filters-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334;
+    margin-bottom: 0.35rem;
+}
+
+.filter-group select,
+.filter-group input {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #d6dbe3;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    background: white;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    outline: none;
+    border-color: #2196f3;
+}
+
+.btn-reset {
+    width: 100%;
+    padding: 0.55rem 1rem;
+    background: #f0f3f7;
+    border: 1px solid #d6dbe3;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #334;
+    transition: background 0.15s;
+}
+
+.btn-reset:hover {
+    background: #e3e8ef;
+}
+
+/* Messages d'état */
+.state-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+    font-size: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.state-message.error {
+    color: #c62828;
+    background: #ffebee;
+}
+
+.state-message.empty p {
+    margin: 0 0 0.75rem;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #2196f3;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+/* Grille de médecins */
+.doctors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+.doctor-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.doctor-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.avatar,
+.avatar-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.avatar {
+    background: linear-gradient(135deg, #2196f3, #1565c0);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.avatar-img {
+    object-fit: cover;
+}
+
+.header-info h3 {
+    margin: 0 0 0.3rem;
+    color: #1a2540;
+    font-size: 1.05rem;
+}
+
+.specialty-badge {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+/* Note */
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.rating.no-rating {
+    color: #999;
+    font-style: italic;
+}
+
+.stars span {
+    color: #ddd;
+    letter-spacing: 1px;
+}
+
+.stars span.filled {
+    color: #f5a623;
+}
+
+.rating-value {
+    font-weight: 600;
+    color: #333;
+}
+
+.rating-count {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+/* Liste d'infos */
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    flex-grow: 1;
+}
+
+.info-list li {
+    padding: 0.3rem 0;
+    color: #444;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-list .icon {
+    font-size: 1rem;
+}
+
+/* Bouton */
+.btn-book {
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    width: 100%;
+}
+
+.btn-book:hover {
+    background: #1976d2;
+}
+
+@media (max-width: 600px) {
+    .doctors-grid {
+        grid-template-columns: 1fr;
+    }
+}

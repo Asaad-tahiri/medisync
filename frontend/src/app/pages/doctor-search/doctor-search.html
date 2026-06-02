@@ -1,0 +1,109 @@
+<div class="search-page">
+    <header class="page-header">
+        <h1>🔍 Trouver un médecin</h1>
+        <p class="subtitle" *ngIf="!loading">
+            {{ filteredDoctors.length }} médecin(s) disponible(s)
+        </p>
+    </header>
+
+    <!-- Filtres -->
+    <section class="filters-card">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="specialty">Spécialité</label>
+                <select id="specialty" [(ngModel)]="selectedSpecialty" (change)="applyFilters()">
+                    <option value="">Toutes</option>
+                    <option *ngFor="let s of specialties" [value]="s">{{ s }}</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="city">Ville</label>
+                <select id="city" [(ngModel)]="selectedCity" (change)="applyFilters()">
+                    <option value="">Toutes</option>
+                    <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="language">Langue</label>
+                <select id="language" [(ngModel)]="selectedLanguage" (change)="applyFilters()">
+                    <option value="">Toutes</option>
+                    <option *ngFor="let l of languages" [value]="l">{{ l }}</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="maxFee">Tarif max (DH)</label>
+                <input type="number" id="maxFee"
+                       [(ngModel)]="maxFee"
+                       (ngModelChange)="applyFilters()"
+                       placeholder="Ex : 300" min="0">
+            </div>
+
+            <div class="filter-group reset-group">
+                <button type="button" class="btn-reset" (click)="resetFilters()">↺ Réinitialiser</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Résultats -->
+    <section class="results">
+        <!-- Chargement -->
+        <div *ngIf="loading" class="state-message">⏳ Chargement des médecins…</div>
+
+        <!-- Erreur -->
+        <div *ngIf="error && !loading" class="state-message error">{{ error }}</div>
+
+        <!-- Aucun résultat -->
+        <div *ngIf="!loading && !error && filteredDoctors.length === 0" class="state-message empty">
+            <p>😔 Aucun médecin ne correspond à vos critères.</p>
+            <button type="button" class="btn-link" (click)="resetFilters()">Réinitialiser les filtres</button>
+        </div>
+
+        <!-- Liste -->
+        <div *ngIf="!loading && !error && filteredDoctors.length > 0" class="doctors-grid">
+            <article class="doctor-card" *ngFor="let doc of filteredDoctors">
+                <div class="card-header">
+                    <img class="avatar-img" *ngIf="doc.photoUrl"
+                         [src]="doc.photoUrl"
+                         [alt]="doc.firstName + ' ' + doc.lastName">
+                    <div class="avatar" *ngIf="!doc.photoUrl">{{ getInitials(doc) }}</div>
+
+                    <div class="header-info">
+                        <h3>Dr. {{ doc.firstName }} {{ doc.lastName }}</h3>
+                        <span class="specialty-badge" *ngIf="doc.specialty">{{ doc.specialty }}</span>
+                    </div>
+                </div>
+
+                <div class="rating" *ngIf="doc.rating > 0">
+                    <span class="stars">
+                        <span *ngFor="let filled of getStars(doc.rating)" [class.filled]="filled">★</span>
+                    </span>
+                    <span class="rating-value">{{ doc.rating | number:'1.1-1' }}</span>
+                    <span class="rating-count" *ngIf="doc.ratingCount">({{ doc.ratingCount }} avis)</span>
+                </div>
+                <div class="rating no-rating" *ngIf="!doc.rating || doc.rating === 0">
+                    <span>Aucun avis pour l'instant</span>
+                </div>
+
+                <ul class="info-list">
+                    <li *ngIf="doc.city"><span class="icon">📍</span> {{ doc.city }}</li>
+                    <li *ngIf="doc.languages?.length">
+                        <span class="icon">🗣️</span> {{ doc.languages.join(', ') }}
+                    </li>
+                    <li *ngIf="doc.consultationFee">
+                        <span class="icon">💶</span> {{ doc.consultationFee }} DH
+                    </li>
+                    <li *ngIf="doc.sector">
+                        <span class="icon">🏥</span> Secteur {{ doc.sector }}
+                    </li>
+                </ul>
+
+                <button type="button" class="btn-book" (click)="bookAppointment(doc._id)">
+                    Prendre rendez-vous
+                </button>
+            </article>
+        </div>
+    </section>
+</div>

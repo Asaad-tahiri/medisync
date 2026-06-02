@@ -1,0 +1,169 @@
+<nav class="navbar">
+    <a routerLink="/dashboard" class="logo">🏥 MediSync</a>
+    <div class="nav-actions">
+        <a routerLink="/doctor" class="nav-link">← Consultations</a>
+    </div>
+</nav>
+
+<div class="page-container">
+    <div *ngIf="isLoading" class="loading">Chargement de la consultation...</div>
+
+    <div *ngIf="notFound && !isLoading" class="error-state">
+        <h2>❌ Consultation introuvable</h2>
+        <p>Ce rendez-vous n'existe pas ou ne vous appartient pas.</p>
+        <a routerLink="/doctor" class="btn btn-primary">Retour aux consultations</a>
+    </div>
+
+    <div *ngIf="!isLoading && !notFound && appointment" class="consultation-layout">
+
+        <!-- Bandeau patient -->
+        <section class="patient-bar card">
+            <div class="patient-main">
+                <div class="avatar">
+                    {{ patient?.firstName?.charAt(0) }}{{ patient?.lastName?.charAt(0) }}
+                </div>
+                <div>
+                    <h2>{{ patient?.firstName }} {{ patient?.lastName }}</h2>
+                    <div class="patient-meta">
+                        <span *ngIf="patient?.dateOfBirth">🎂 {{ getAge(patient.dateOfBirth) }}</span>
+                        <span *ngIf="patient?.phone">📞 {{ patient.phone }}</span>
+                        <span class="motif-badge" [class]="'motif-' + appointment.motif">
+                            {{ motifLabel(appointment.motif) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="patient-medical">
+                <div class="med-block">
+                    <strong>Allergies :</strong>
+                    <span *ngIf="patient?.allergies?.length; else noAllergies" class="allergies">
+                        <span *ngFor="let a of patient.allergies" class="tag tag-danger">{{ a }}</span>
+                    </span>
+                    <ng-template #noAllergies><em class="muted">Aucune renseignée</em></ng-template>
+                </div>
+                <div class="med-block">
+                    <strong>Antécédents :</strong>
+                    <span *ngIf="patient?.antecedents?.length; else noAnt" class="antecedents">
+                        <span *ngFor="let a of patient.antecedents" class="tag">{{ a }}</span>
+                    </span>
+                    <ng-template #noAnt><em class="muted">Aucun renseigné</em></ng-template>
+                </div>
+            </div>
+
+            <a [routerLink]="['/patient', patient?._id]" target="_blank" class="btn-link">
+                📋 Dossier complet →
+            </a>
+        </section>
+
+        <!-- Demande du patient -->
+        <section *ngIf="appointment.notes" class="card patient-request">
+            <h3>💬 Demande du patient</h3>
+            <p>{{ appointment.notes }}</p>
+        </section>
+
+        <!-- Erreur -->
+        <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+        <!-- 2 colonnes : compte-rendu + ordonnance -->
+        <div class="two-columns">
+
+            <!-- COMPTE-RENDU -->
+            <section class="card">
+                <h3>📝 Compte-rendu de consultation</h3>
+
+                <div class="templates">
+                    <small>Modèles pré-remplis :</small>
+                    <div class="template-buttons">
+                        <button type="button"
+                                *ngFor="let tpl of templates"
+                                class="tpl-btn"
+                                (click)="applyTemplate(tpl)">
+                            {{ tpl.label }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Symptômes</label>
+                    <textarea [(ngModel)]="symptoms" rows="3"
+                              placeholder="Symptômes décrits par le patient..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Diagnostic <span class="required">*</span></label>
+                    <textarea [(ngModel)]="diagnosis" rows="3"
+                              placeholder="Diagnostic médical (obligatoire)..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Traitement recommandé</label>
+                    <textarea [(ngModel)]="treatment" rows="3"
+                              placeholder="Conseils, prescriptions non médicamenteuses..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes complémentaires</label>
+                    <textarea [(ngModel)]="notes" rows="2"
+                              placeholder="Observations, suivi prévu..."></textarea>
+                </div>
+            </section>
+
+            <!-- ORDONNANCE -->
+            <section class="card">
+                <h3>💊 Ordonnance</h3>
+
+                <div *ngIf="medicines.length === 0" class="empty-meds">
+                    <p>Aucun médicament. Cliquez sur "+ Ajouter" pour créer une ordonnance.</p>
+                </div>
+
+                <div *ngFor="let med of medicines; let i = index" class="medicine-card">
+                    <div class="med-header">
+                        <span class="med-num">#{{ i + 1 }}</span>
+                        <button type="button" class="btn-remove" (click)="removeMedicine(i)" title="Supprimer">
+                            ✕
+                        </button>
+                    </div>
+                    <div class="med-fields">
+                        <div class="form-group">
+                            <label>Nom du médicament</label>
+                            <input type="text" [(ngModel)]="med.name" name="med-name-{{i}}"
+                                   placeholder="Ex : Doliprane">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Dosage</label>
+                                <input type="text" [(ngModel)]="med.dosage" name="med-dosage-{{i}}"
+                                       placeholder="Ex : 1000 mg">
+                            </div>
+                            <div class="form-group">
+                                <label>Fréquence</label>
+                                <input type="text" [(ngModel)]="med.frequency" name="med-freq-{{i}}"
+                                       placeholder="Ex : 3 fois/jour">
+                            </div>
+                            <div class="form-group">
+                                <label>Durée</label>
+                                <input type="text" [(ngModel)]="med.duration" name="med-dur-{{i}}"
+                                       placeholder="Ex : 7 jours">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add-med" (click)="addMedicine()">
+                    + Ajouter un médicament
+                </button>
+            </section>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-bar card">
+            <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isSaving">
+                Annuler
+            </button>
+            <button type="button" class="btn btn-success" (click)="completeConsultation()" [disabled]="isSaving">
+                {{ isSaving ? 'Enregistrement...' : '✓ Terminer la consultation' }}
+            </button>
+        </div>
+    </div>
+</div>

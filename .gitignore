@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Angular cache
+.angular/
+
+# Variables d'environnement (NE JAMAIS pusher !)
+.env
+*.env
+
+# Build
+dist/
+out-tsc/
+
+# OS
+.DS_Store
+Thumbs.db
